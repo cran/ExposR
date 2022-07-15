@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2022-07-10" />
+
+<title>Overview of ExposR</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Overview of ExposR</h1>
+<h4 class="date">10 July 2022</h4>
+
+
+
+<div id="expos-model" class="section level2">
+<h2>EXPOS Model</h2>
+<p>The EXPOS model uses a digital elevation model (DEM) to estimate
+exposed and protected areas for a given hurricane wind direction and
+inflection angle. The resulting topograhic exposure maps can be combined
+with output from the HURRECON model to estimate hurricane wind damage
+across a region.</p>
+<p>EXPOS contains two main functions:</p>
+<ol style="list-style-type: decimal">
+<li>The <i>expos_model</i> function estmates topopgrahic exposure for a
+specified wind direction and inflection angle. The input file is assumed
+to be a raster of elevation values in GeoTiff format with missing values
+represented by zero. Cells may be rectangular. The user can specify if
+coordinates are lat/long; otherwise lat/long is assumed if X values are
+between -180 and 180 and Y values are between -90 and 90. If coordinates
+are lat/long, horizontal and vertical units are assumed to be degrees
+and meters, respectively; otherwise horizontal and vertical units must
+be the same. Columns are assumed to be closely aligned with true North
+(0 degrees); if not, the map orientation (azimuth) must be specified in
+degrees. The name of the input file is assumed to be “dem.tif”.</li>
+</ol>
+<p>The output file is a raster file in GeoTiff format with the following
+values: 0 = missing data, 1 = protected, 2 = exposed. Output files are
+named “expos-xxx-yy.tif” where xxx is the wind direction and yy is the
+inflection angle.</p>
+<p>In previous studies, spatial resolutions of 30 or 60 meters and an
+inflection angle of 6 degrees were found to work well (see below). Note
+that increasing the inflection angle tends to decrease the size and
+number of protected areas while increasing the odds that these sites are
+protected.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>The <i>expos_damage</i> function estimates regional hurricane damage
+where topographic exposure at each location is determined by peak wind
+direction. If a location is protected, the enhanced Fujita scale (EF)
+rating from HURRECON is reduced by a specified number of EF ratings.
+This function requires a hurricane GeoTiff file created by HURRECON,
+exposure files created by EXPOS for the eight cardinal wind directions
+(N, NE, E, etc), and a reprojection file in CSV format
+(<i>reproject.csv</i>) that contains lat/long coordinates for the lower
+left and upper right corners of the digital elevation model (variables:
+<i>name</i>, <i>lat_0</i>, <i>lon_0</i>, <i>lat_1</i>,
+<i>lon_1</i>).</li>
+</ol>
+<p>The output file is a raster file in GeoTiff format with the following
+values: 0 = missing, 1 = no damage, 2 = EF0 damage, 3 = EF1 damage, 4 =
+EF2 damage, 5 = EF3 damage, 6 = EF4 damage, 7 = EF5 damage. Output files
+are named “hhhh-damage-yy-z.tif” where hhhh is the hurricane ID, yy is
+the inflection angle, and z is the reduction in EF rating for protected
+areas.</p>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
+<p>Here are the basic steps for using the model. Please see below for
+more details.</p>
+<ol style="list-style-type: decimal">
+<li>Install and load the R package for the model (ExposR).</li>
+<li>Create a directory for a particular study area with subdirectories
+as described below.</li>
+<li>Copy the digital elevation file to the <i>dem</i> subdirectory and
+rename it “dem.tif”.</li>
+<li>Download or create geographic and political boundary shapefiles for
+the desired study area. Copy these files to the <i>vector</i>
+subdirectory and rename so the first name of each file is
+“boundaries”.</li>
+<li>Use the <i>expos_model</i> function to create exposure maps for
+different wind directions and inflection angles.</li>
+<li>Use the <i>expos_damage</i> function to create maps of enhanced
+Fujita scale wind damage for particular hurricanes.</li>
+</ol>
+</div>
+<div id="details" class="section level2">
+<h2>Details</h2>
+<p>All user functions begin with “expos”. The wind direction and
+inflection angle must be specified in degrees.</p>
+<p>The user specifies a directory (<i>exp_path</i>) for a given study
+area. Input and output files are stored on the following subdirectories
+of this directory:</p>
+<pre><code>exp_path/dem
+exp_path/exposure
+exp_path/damage
+exp_path/vector</code></pre>
+<p>The <i>dem</i> subdirectory contains the input elevation file. The
+<i>exposure</i> subdirectory contains output files from the
+<i>expos_model</i> function. The <i>damage</i> subdirectory contains
+input files from the HURRECON model, the reprojection file, and output
+files from the <i>expos_damage</i> function. Shapefiles that contain
+geographic and political boundaries for viewing results are stored on
+the <i>vector</i> subdirectory.</p>
+<p>To run the model, create the above directories, copy the input files
+to their respective subdirectories, and use the <i>library</i> function
+to load ExposR.</p>
+</div>
+<div id="model-functions" class="section level2">
+<h2>Model Functions</h2>
+<pre><code>expos_set_path
+expos_get_path
+expos_model
+expos_damage
+expos_summarize
+expos_plot</code></pre>
+<p>The <i>expos_set_path</i> function sets the path for the current set
+of model runs. The <i>expos_get_path</i> function returns the current
+path. Use <i>expos_set_path</i> before using other functions.</p>
+<p>The <i>expos_model</i> function creates a raster file of topographic
+wind exposure as a function of wind direction and inflection angle.</p>
+<p>The <i>expos_damage</i> function uses output from EXPOS and HURRECON
+to create a raster file of wind damage where topograhic exposure at each
+location is determined by peak wind direction. If a location is
+protected, the enhanced Fujita scale rating is reduced by a specfied
+amount.</p>
+<p>The <i>expos_summarize</i> function displays summary information for
+a specified raster file, including the number of rows and columns,
+spatial extent, cell height and width, and minimum and maximum
+value.</p>
+<p>The <i>expos_plot</i> function creates a plot of a specified raster
+file.</p>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<pre><code>expos_set_path(&quot;c:/expos/wach_30m&quot;)
+expos_get_path()
+
+expos_model(wind_direction=90, inflection_angle=6)
+expos_damage(hurricane=&quot;AL1938-06&quot;, inflection_angle=6, protect=2)
+
+expos_summarize(&quot;dem&quot;)
+
+expos_plot(&quot;dem&quot;)
+expos_plot(&quot;expos-090-06&quot;)
+expos_plot(&quot;AL1938-06-damage-06-2&quot;)</code></pre>
+</div>
+<div id="history" class="section level2">
+<h2>History</h2>
+<p>The original EXPOS model was written in Borland Pascal and depended
+on Idrisi for spatial visualization. The model was used in published
+studies of the ecological impacts of historical hurricanes in New
+England and Puerto Rico:</p>
+<ul>
+<li><p>Boose, E. R., Foster, D. R., Fluet, M. 1994. Hurricane impacts to
+tropical and temperate forest landscapes. Ecological Monographs 64:
+369-400. doi.org/10.2307/2937142.</p></li>
+<li><p>Boose, E. R., Chamberlin, K. E., Foster, D. R. 2001. Landscape
+and regional impacts of hurricanes in New England. Ecological Monographs
+71: 27-48.
+doi.org/10.1890/0012-9615(2001)071[0027:LARIOH]2.0.CO;2.</p></li>
+<li><p>Boose, E. R., Serrano, M. I., Foster, D. R. 2004. Landscape and
+regional impacts of hurricanes in Puerto Rico. Ecological Monographs 74:
+335-352. doi.org/10.1890/02-4057.</p></li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
