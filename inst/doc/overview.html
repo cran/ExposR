@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2022-07-10" />
+<meta name="date" content="2023-06-12" />
 
 <title>Overview of ExposR</title>
 
@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
 </script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
@@ -237,7 +237,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Overview of ExposR</h1>
-<h4 class="date">10 July 2022</h4>
+<h4 class="date">12 June 2023</h4>
 
 
 
@@ -254,13 +254,14 @@ across a region.</p>
 specified wind direction and inflection angle. The input file is assumed
 to be a raster of elevation values in GeoTiff format with missing values
 represented by zero. Cells may be rectangular. The user can specify if
-coordinates are lat/long; otherwise lat/long is assumed if X values are
-between -180 and 180 and Y values are between -90 and 90. If coordinates
-are lat/long, horizontal and vertical units are assumed to be degrees
-and meters, respectively; otherwise horizontal and vertical units must
-be the same. Columns are assumed to be closely aligned with true North
-(0 degrees); if not, the map orientation (azimuth) must be specified in
-degrees. The name of the input file is assumed to be “dem.tif”.</li>
+coordinates are latitude/longitude; otherwise latitude/longitude is
+assumed if X values are between -180 and 180 and Y values are between
+-90 and 90. If coordinates are latitude/longitude, horizontal and
+vertical units are assumed to be degrees and meters, respectively;
+otherwise horizontal and vertical units must be the same. Columns are
+assumed to be closely aligned with true North (0 degrees); if not, the
+map orientation (azimuth) must be specified in degrees. The name of the
+input file is assumed to be “dem.tif”.</li>
 </ol>
 <p>The output file is a raster file in GeoTiff format with the following
 values: 0 = missing data, 1 = protected, 2 = exposed. Output files are
@@ -279,9 +280,9 @@ rating from HURRECON is reduced by a specified number of EF ratings.
 This function requires a hurricane GeoTiff file created by HURRECON,
 exposure files created by EXPOS for the eight cardinal wind directions
 (N, NE, E, etc), and a reprojection file in CSV format
-(<i>reproject.csv</i>) that contains lat/long coordinates for the lower
-left and upper right corners of the digital elevation model (variables:
-<i>name</i>, <i>lat_0</i>, <i>lon_0</i>, <i>lat_1</i>,
+(<i>reproject.csv</i>) that contains latitude/longitude coordinates for
+the lower left and upper right corners of the digital elevation model
+(variables: <i>name</i>, <i>lat_0</i>, <i>lon_0</i>, <i>lat_1</i>,
 <i>lon_1</i>).</li>
 </ol>
 <p>The output file is a raster file in GeoTiff format with the following
@@ -290,6 +291,10 @@ EF2 damage, 5 = EF3 damage, 6 = EF4 damage, 7 = EF5 damage. Output files
 are named “hhhh-damage-yy-z.tif” where hhhh is the hurricane ID, yy is
 the inflection angle, and z is the reduction in EF rating for protected
 areas.</p>
+<p>Note: for large areas, best results will be obtained by converting
+the DEM to latitude/longitude coordinates (if necessary) before running
+<i>expos_model</i> and <i>expos_damage</i> and then converting the
+resulting damage maps to the desired map projection.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
@@ -367,6 +372,8 @@ expos_model(wind_direction=90, inflection_angle=6)
 expos_damage(hurricane=&quot;AL1938-06&quot;, inflection_angle=6, protect=2)
 
 expos_summarize(&quot;dem&quot;)
+expos_summarize(&quot;expos-090-06&quot;)
+expos_summarize(&quot;AL1938-06-damage-06-2&quot;)
 
 expos_plot(&quot;dem&quot;)
 expos_plot(&quot;expos-090-06&quot;)
